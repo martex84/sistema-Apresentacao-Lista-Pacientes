@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { Header } from './components/header'
+
+import { Header } from './components/header';
+import { Footer } from './components/footer';
 import styles from './styles/App.module.scss'
 
 function App() {
@@ -7,6 +9,10 @@ function App() {
   return (
     <div className={styles.app}>
       <Header />
+      <section>
+
+      </section>
+      <Footer />
     </div>
   )
 }
