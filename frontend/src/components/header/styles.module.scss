@@ -1,0 +1,19 @@
+.headerContainer {
+    padding: 10px 20px;
+
+    background-color: #F9F7F7;
+
+    .containerSpanLogin {
+        font-size: 1.3em;
+    }
+
+    .containerUsuario {
+        border-radius: 50%;
+
+        &:hover {
+            cursor: pointer;
+            background-color: #e6e5e5;
+
+        }
+    }
+}
