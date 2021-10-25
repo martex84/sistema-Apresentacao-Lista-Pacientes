@@ -1,0 +1,16 @@
+.rowContainer {
+    height: 40px;
+    padding: 0;
+
+    list-style: none;
+
+    >li {
+        width: 150px;
+        height: 100%;
+
+        border: 1px solid #819EB1;
+        border-collapse: collapse;
+    }
+
+
+}

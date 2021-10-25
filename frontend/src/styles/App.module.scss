@@ -1,7 +1,9 @@
+@mixin listDefault {
+    list-style: none;
+}
+
 .app {
     height: 100vh;
-
-    background-color: #F2F2F2;
 }
 
 .sectionContainer {
@@ -10,7 +12,6 @@
     margin: 50px auto;
 
     .searchContainer {
-
 
         input {
             width: 360px;
@@ -31,6 +32,57 @@
 
             border: 2px solid #B3B3B3;
             border-left: 0;
+        }
+    }
+
+    .containerTable {
+        @include listDefault();
+
+        padding: 0;
+
+        >ul {
+            @include listDefault();
+
+            height: 40px;
+            padding: 0;
+
+            >li {
+                width: 150px;
+                height: 100%;
+
+                border: 1px solid #819EB1;
+                border-collapse: collapse;
+
+                background: #A4B5BF;
+                color: #27353F;
+
+                position: relative;
+
+                .containerIcon {
+                    position: absolute;
+                    right: 10px;
+                }
+            }
+
+        }
+
+
+
+    }
+
+    .containerMoreRow button {
+        background-color: transparent;
+
+        border: 0;
+
+        >:first-child {
+            padding-right: 15px;
+        }
+
+        &:hover {
+            >:first-child {
+                color: #49708C;
+            }
         }
     }
 
