@@ -1,45 +1,40 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { VscSearch } from 'react-icons/vsc'
 import { BsSortAlphaDown, BsArrowClockwise } from 'react-icons/bs'
 
 import { Header } from './components/header';
 import { Footer } from './components/footer';
 import { Row } from './components/row';
+import { ResultContext } from './context/contextApiResultPacients'
+import { DadosPessoaContext } from './types'
+
 import styles from './styles/App.module.scss'
-
-
-type IDadosPessoa = {
-  nome: string,
-  email: string,
-  genero: string,
-  dataNascimento: string,
-  telefone: string,
-  nacionalidade: string,
-  endereco: string,
-  id: string,
-  url: string
-}
 
 function App() {
 
-  const [arrayPessoa, setArrayPessoa] = useState<IDadosPessoa[]>([]);
+  const [arrayPessoa, setArrayPessoa] = useState<DadosPessoaContext[]>([]);
+
+  const resultContext = useContext(ResultContext);
+
+  const hrefLocal = window.location.href;
+
+  if (resultContext.user.length === 0) {
+    resultContext.changePage(hrefLocal.split("?page=")[1]);
+  }
+
+  function mudancaPage() {
+    const hrefLocation = window.location.href.split("?page=")
+
+    const numeroPage: number = parseInt(hrefLocation[1]) + 1;
+
+    window.history.pushState({}, `${hrefLocation[0]}?page=${numeroPage}`)
+  }
 
   useEffect(() => {
-    if (arrayPessoa.length === 0) {
-      setArrayPessoa([{
-        nome: "Marcelo",
-        email: "Email",
-        genero: "Masculino",
-        dataNascimento: "00/00/00",
-        telefone: "Telefone",
-        nacionalidade: "Brasileiro",
-        endereco: "Endereço",
-        id: "asdasda",
-        url: "www.local.com.br"
-      }])
+    if (arrayPessoa.length === 0 && resultContext.user.length !== 0) {
+      setArrayPessoa(resultContext.user);
     }
-  }, [])
-
+  }, [resultContext])
   return (
     <div className={`${styles.app} d-flex flex-column align-items-stretch`}>
       <Header />
@@ -84,11 +79,11 @@ function App() {
               if (valor) {
                 return (
                   <Row
-                    key={valor.id}
-                    nome={valor.nome}
-                    dataNascimento={valor.dataNascimento}
-                    genero={valor.genero}
-                    id={valor.id}
+                    key={valor.id.value}
+                    name={valor.name}
+                    date={valor.dob.date}
+                    gender={valor.gender}
+                    id={valor.id.value}
                   />
                 );
               }
@@ -96,7 +91,7 @@ function App() {
           </ul>
         </div>
         <div className={`${styles.containerMoreRow} d-flex flex-row align-items-center justify-content-center mt-4`} >
-          <button>
+          <button onClick={event => mudancaPage()}>
             <span>
               <BsArrowClockwise size="30" />
             </span>
