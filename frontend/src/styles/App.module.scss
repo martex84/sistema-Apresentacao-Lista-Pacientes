@@ -62,6 +62,10 @@
                     position: absolute;
                     right: 10px;
                 }
+
+                &:first-child {
+                    width: 300px;
+                }
             }
 
         }

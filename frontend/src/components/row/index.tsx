@@ -17,13 +17,19 @@ export function Row(props: IPropsPessoa) {
             <li>
                 <ul className={`${styles.rowContainer} d-flex flex-row align-items-center justify-content-center`}>
                     <li className={`d-flex flex-row align-items-center justify-content-center`}>
-                        {`${props.name.title}`}
+                        <span>
+                            {`${props.name.title} ${props.name.first} ${props.name.last}`}
+                        </span>
                     </li>
                     <li className={`d-flex flex-row align-items-center justify-content-center`}>
-                        {props.gender}
+                        <span>
+                            {props.gender}
+                        </span>
                     </li>
                     <li className={`d-flex flex-row align-items-center justify-content-center`}>
-                        {props.date}
+                        <span>
+                            {props.date}
+                        </span>
                     </li>
                     <li className={`d-flex flex-row align-items-center justify-content-center`}>
                         <button className={`btn btn-light`}>

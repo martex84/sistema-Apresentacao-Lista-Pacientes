@@ -1,6 +1,7 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useCallback } from 'react'
 import { VscSearch } from 'react-icons/vsc'
-import { BsSortAlphaDown, BsArrowClockwise } from 'react-icons/bs'
+import { BsArrowClockwise, BsSortAlphaDown } from 'react-icons/bs'
+import { Link } from 'react-router-dom'
 
 import { Header } from './components/header';
 import { Footer } from './components/footer';
@@ -14,27 +15,33 @@ function App() {
 
   const [arrayPessoa, setArrayPessoa] = useState<DadosPessoaContext[]>([]);
 
+  const hrefLocation = window.location.href.split("?page=")
+
   const resultContext = useContext(ResultContext);
 
-  const hrefLocal = window.location.href;
-
   if (resultContext.user.length === 0) {
-    resultContext.changePage(hrefLocal.split("?page=")[1]);
+    resultContext.changePage(hrefLocation[1]);
   }
 
   function mudancaPage() {
-    const hrefLocation = window.location.href.split("?page=")
 
     const numeroPage: number = parseInt(hrefLocation[1]) + 1;
 
-    window.history.pushState({}, `${hrefLocation[0]}?page=${numeroPage}`)
+    history.pushState({}, "", `${hrefLocation[0]}?page=${numeroPage}`);
+
+    resultContext.changePage(`${numeroPage}`);
+
+    window.location.reload();
   }
 
   useEffect(() => {
     if (arrayPessoa.length === 0 && resultContext.user.length !== 0) {
       setArrayPessoa(resultContext.user);
     }
-  }, [resultContext])
+  }, [resultContext]);
+
+  console.log()
+
   return (
     <div className={`${styles.app} d-flex flex-column align-items-stretch`}>
       <Header />
@@ -91,7 +98,7 @@ function App() {
           </ul>
         </div>
         <div className={`${styles.containerMoreRow} d-flex flex-row align-items-center justify-content-center mt-4`} >
-          <button onClick={event => mudancaPage()}>
+          <button onClick={() => mudancaPage()}>
             <span>
               <BsArrowClockwise size="30" />
             </span>
