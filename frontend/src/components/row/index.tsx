@@ -7,11 +7,16 @@ interface IPropsPessoa {
         first: string,
         last: string
     },
-    date: string,
+    date: {
+        day: string,
+        month: string,
+        year: string
+    },
     gender: string,
 }
 
 export function Row(props: IPropsPessoa) {
+
     return (
         <>
             <li>
@@ -28,7 +33,7 @@ export function Row(props: IPropsPessoa) {
                     </li>
                     <li className={`d-flex flex-row align-items-center justify-content-center`}>
                         <span>
-                            {props.date}
+                            {`${props.date.day}/${props.date.month}/${props.date.year}`}
                         </span>
                     </li>
                     <li className={`d-flex flex-row align-items-center justify-content-center`}>

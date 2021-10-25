@@ -7,13 +7,13 @@ import { Header } from './components/header';
 import { Footer } from './components/footer';
 import { Row } from './components/row';
 import { ResultContext } from './context/contextApiResultPacients'
-import { DadosPessoaContext } from './types'
+import { DadosPessoaContextFinal } from './types'
 
 import styles from './styles/App.module.scss'
 
 function App() {
 
-  const [arrayPessoa, setArrayPessoa] = useState<DadosPessoaContext[]>([]);
+  const [arrayPessoa, setArrayPessoa] = useState<DadosPessoaContextFinal[]>([]);
 
   const hrefLocation = window.location.href.split("?page=")
 
@@ -39,8 +39,6 @@ function App() {
       setArrayPessoa(resultContext.user);
     }
   }, [resultContext]);
-
-  console.log()
 
   return (
     <div className={`${styles.app} d-flex flex-column align-items-stretch`}>
