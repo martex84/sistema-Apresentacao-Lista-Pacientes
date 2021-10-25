@@ -1,17 +1,11 @@
 import { Children, createContext, ReactNode, useEffect, useState } from "react";
 
 import { api } from "../services/api";
+import { DadosPessoaContext } from '../types'
 
-type IDadosPessoaContext = {
-    nome: string,
-    email: string,
-    genero: string,
-    dataNascimento: string,
-    telefone: string,
-    nacionalidade: string,
-    endereco: string,
-    id: string,
-    url: string
+type ReturnPessoaGet = {
+    data: any;
+    results: DadosPessoaContext[];
 }
 
 type ResultPessoaProvider = {
@@ -19,29 +13,39 @@ type ResultPessoaProvider = {
 }
 
 type ResultPessoaContext = {
-    changePage: () => IDadosPessoaContext[]
+    changePage: (page: string) => Promise<void>,
+    user: DadosPessoaContext[];
 }
 
-export const ResultContext = createContext(null);
+export const ResultContext = createContext({} as ResultPessoaContext);
 
 export function ResultPessoaProvider(props: ResultPessoaProvider) {
 
-    const [user, setUser] = useState<IDadosPessoaContext[]>([]);
+    const [user, setUser] = useState<DadosPessoaContext[]>([]);
 
-    async function getPessoa(page: string) {
-        const retorno = await api.get(`/?page=${page}&result=10&seed=abc&exc=login,registered`)
+    async function changePage(page: string) {
+        const getPessoa = await api.get<ReturnPessoaGet>(`/?page=${page}&results=10&seed=abc&exc=login,registered,phone`);
 
-        console.log(retorno);
+        const returno: DadosPessoaContext[] = [];
+
+        getPessoa.data.results.map((value) => {
+
+            if (value.id.value !== null) {
+                returno.push(value);
+            }
+        })
+
+        setUser(returno);
     }
 
     useEffect(() => {
-        if (!user) {
-            getPessoa("1")
+        if (!!user) {
+            changePage("1")
         }
     }, [])
 
     return (
-        <ResultContext.Provider value={null}>
+        <ResultContext.Provider value={{ user, changePage }}>
             {props.children}
         </ResultContext.Provider>
     );
