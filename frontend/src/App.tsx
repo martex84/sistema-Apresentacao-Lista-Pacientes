@@ -18,6 +18,8 @@ function App() {
 
   const [arrayPessoa, setArrayPessoa] = useState<DadosPessoaContextFinal[]>([]);
 
+  const [idPessoa, setIdPessoa] = useState<string>("");
+
   const [pessoa, setPessoa] = useState<DadosPessoaContextFinal>({
     name: {
       title: "",
@@ -57,7 +59,9 @@ function App() {
 
   async function verificaLink() {
     if (resultContext.user.length === 0) {
-      await resultContext.changePage(hrefLocation[1]);
+      const posicaoSite: string = hrefLocation[1].split("&")[0] === undefined ? hrefLocation[1] : hrefLocation[1].split("&")[0];
+
+      await resultContext.changePage(posicaoSite).then(() => { });
     }
   }
 
@@ -65,35 +69,13 @@ function App() {
 
   if (hrefLocation[1] === undefined) {
     history.pushState({}, "", `${hrefLocation[0]}?page=1`);
+    createLocalStorate(false, false);
   }
 
   if (resultContext.user.length !== 0 && hrefLocation[1] !== undefined) {
     if (hrefLocation[1].indexOf("id") !== -1) {
-
-      const localStorageSal: any | null = localStorage.getItem("SALPessoa")
-
-      const id = hrefLocation[1].split("id=")[1];
-
-      if (localStorageSal === null) {
-
-        resultContext.user.forEach(valor => {
-          if (valor.id.value === id) {
-            setPessoa(valor);
-
-            createLocalStorate(true, false);
-
-          }
-        });
-      }
-      else if (JSON.parse(localStorage.getItem("SALPessoa") as string).model === false) {
-        if (verificaPessoa() === false) {
-          resultContext.user.forEach(valor => {
-            if (valor.id.value === id) {
-              setPessoa(valor);
-            }
-          });
-        }
-      }
+      console.log(hrefLocation[1])
+      createLocalStorate(true, false);
     }
   }
 
@@ -126,8 +108,8 @@ function App() {
 
   function createLocalStorate(model: boolean, view: boolean) {
     localStorage.setItem("SALPessoa", JSON.stringify({
-      model: false,
-      view: false
+      model: model,
+      view: view
     }))
   }
 
@@ -146,14 +128,25 @@ function App() {
   }
 
   useEffect(() => {
-    if (verificaPessoa() === true) {
-      createLocalStorate(true, true);
-    }
-  }, [setPessoa])
+
+
+    console.log(pessoa);
+  }, [pessoa, setPessoa])
 
   useEffect(() => {
     if (arrayPessoa.length === 0 && resultContext.user.length !== 0) {
       setArrayPessoa(resultContext.user);
+    }
+    if (arrayPessoa.length > 0) {
+      if (localStorage !== null) {
+        if (JSON.parse(localStorage.getItem("SALPessoa") as string).view === true && JSON.parse(localStorage.getItem("SALPessoa") as string).model === false) {
+          createLocalStorate(false, true);
+        }
+        else if (JSON.parse(localStorage.getItem("SALPessoa") as string).view === false && JSON.parse(localStorage.getItem("SALPessoa") as string).model === true) {
+
+
+        }
+      }
     }
   }, [resultContext]);
 

@@ -1,5 +1,5 @@
 
-import { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { VscAccount } from 'react-icons/vsc'
 
 import { DadosPessoaContextFinal } from "../../types";
@@ -16,6 +16,8 @@ export function Modal(props: TConfigModal) {
 
     const [displayInterno, setDisplayInterno] = useState<string>("")
 
+    const [styleInterno, setStyleInterno] = useState<React.CSSProperties>({});
+
     const contextApi = useContext(ResultContext);
 
     function alterarDisplay() {
@@ -25,7 +27,8 @@ export function Modal(props: TConfigModal) {
                 model: false
             }))
 
-            setDisplayInterno("d-none")
+            setDisplayInterno("")
+            setStyleInterno({})
         }
     }
 
@@ -40,14 +43,16 @@ export function Modal(props: TConfigModal) {
     }
 
     if (verificaOpcaoModal()) {
-        setDisplayInterno("d-block");
+        console.log("TEste")
+        setDisplayInterno("show");
+        setStyleInterno({ display: 'block' });
     }
 
     //UsarCallback para verificar se foi alterado
 
     return (
         <>
-            <div className={`${styles.modal} ${displayInterno} modal fade`} id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className={`${styles.modal} ${displayInterno} modal fade`} id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true" style={styleInterno}>
                 <div className="modal-dialog">
                     <div className={`${styles.containerModal} modal-content`}>
                         <div className="modal-header">
