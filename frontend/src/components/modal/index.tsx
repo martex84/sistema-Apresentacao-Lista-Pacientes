@@ -1,21 +1,60 @@
 
+import { useContext, useEffect, useState } from 'react'
 import { VscAccount } from 'react-icons/vsc'
 
-import { DadosPessoaContextFinal } from "../../types"
+import { DadosPessoaContextFinal } from "../../types";
+
+import { ResultContext } from '../../context/contextApiResultPacients';
 
 import styles from './styles.module.scss'
 
-export function Modal(props: DadosPessoaContextFinal) {
+type TConfigModal = {
+    pessoa: DadosPessoaContextFinal
+}
+
+export function Modal(props: TConfigModal) {
+
+    const [displayInterno, setDisplayInterno] = useState<string>("")
+
+    const contextApi = useContext(ResultContext);
+
+    function alterarDisplay() {
+
+        if (verificaOpcaoModal()) {
+            localStorage.setItem("SALPessoa", JSON.stringify({
+                model: false
+            }))
+
+            setDisplayInterno("d-none")
+        }
+    }
+
+    function verificaOpcaoModal() {
+        let returnValor = false;
+        if (localStorage.getItem("SALPessoa") !== null) {
+            if (JSON.parse(localStorage.getItem("SALPessoa") as string).model === true && displayInterno === "d-none" && props.pessoa.id.value !== "" && JSON.parse(localStorage.getItem("SALPessoa") as string).view === false) {
+                returnValor = true;
+            }
+        }
+        return returnValor;
+    }
+
+    if (verificaOpcaoModal()) {
+        setDisplayInterno("d-block");
+    }
+
+    //UsarCallback para verificar se foi alterado
+
     return (
         <>
-            <div className={`${styles.modal} modal fade`} id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className={`${styles.modal} ${displayInterno} modal fade`} id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className={`${styles.containerModal} modal-content`}>
                         <div className="modal-header">
                             <div className={`${styles.containerImagem}`}>
-                                <img src={props.picture.large} alt="Imagem Paciente" />
+                                <img src={props.pessoa.picture.large} alt="Imagem Paciente" />
                             </div>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => alterarDisplay()}></button>
                         </div>
                         <div className={`${styles.containerBody} modal-body`}>
                             <div>
@@ -23,7 +62,7 @@ export function Modal(props: DadosPessoaContextFinal) {
                                     Id:
                                 </span>
                                 <span>
-                                    {props.id.value}
+                                    {props.pessoa.id.value}
                                 </span>
                             </div>
                             <div>
@@ -31,7 +70,7 @@ export function Modal(props: DadosPessoaContextFinal) {
                                     Nome:
                                 </span>
                                 <span>
-                                    {`${props.name.title} ${props.name.first} ${props.name.last}`}
+                                    {`${props.pessoa.name.title} ${props.pessoa.name.first} ${props.pessoa.name.last}`}
                                 </span>
                             </div>
                             <div>
@@ -39,7 +78,7 @@ export function Modal(props: DadosPessoaContextFinal) {
                                     Email:
                                 </span>
                                 <span>
-                                    {props.email}
+                                    {props.pessoa.email}
                                 </span>
                             </div>
                             <div>
@@ -47,7 +86,7 @@ export function Modal(props: DadosPessoaContextFinal) {
                                     Gênero:
                                 </span>
                                 <span>
-                                    {props.gender}
+                                    {props.pessoa.gender}
                                 </span>
                             </div>
                             <div>
@@ -55,7 +94,7 @@ export function Modal(props: DadosPessoaContextFinal) {
                                     Data de Nascimento:
                                 </span>
                                 <span>
-                                    {`${props.dob.date.day}/${props.dob.date.month}/${props.dob.date.year}`}
+                                    {`${props.pessoa.dob.date.day}/${props.pessoa.dob.date.month}/${props.pessoa.dob.date.year}`}
                                 </span>
                             </div>
                             <div>
@@ -63,7 +102,7 @@ export function Modal(props: DadosPessoaContextFinal) {
                                     Telefone:
                                 </span>
                                 <span>
-                                    {props.cell}
+                                    {props.pessoa.cell}
                                 </span>
                             </div>
                             <div>
@@ -71,7 +110,7 @@ export function Modal(props: DadosPessoaContextFinal) {
                                     Nacionalidade:
                                 </span>
                                 <span>
-                                    {props.nat}
+                                    {props.pessoa.nat}
                                 </span>
                             </div>
                             <div>
@@ -79,8 +118,8 @@ export function Modal(props: DadosPessoaContextFinal) {
                                     Endereço:
                                 </span>
                                 <span>
-                                    {`${props.location.street.name
-                                        } - ${props.location.street.number}`}
+                                    {`${props.pessoa.location.street.name
+                                        } - ${props.pessoa.location.street.number}`}
                                 </span>
                             </div>
                             <div>
@@ -88,7 +127,7 @@ export function Modal(props: DadosPessoaContextFinal) {
                                     Cidade:
                                 </span>
                                 <span>
-                                    {`${props.location.city
+                                    {`${props.pessoa.location.city
                                         }`}
                                 </span>
                             </div>
@@ -97,7 +136,7 @@ export function Modal(props: DadosPessoaContextFinal) {
                                     Estado:
                                 </span>
                                 <span>
-                                    {`${props.location.state
+                                    {`${props.pessoa.location.state
                                         }`}
                                 </span>
                             </div>
@@ -106,7 +145,7 @@ export function Modal(props: DadosPessoaContextFinal) {
                                     País:
                                 </span>
                                 <span>
-                                    {`${props.location.country
+                                    {`${props.pessoa.location.country
                                         }`}
                                 </span>
                             </div>
@@ -115,7 +154,7 @@ export function Modal(props: DadosPessoaContextFinal) {
                                     Link:
                                 </span>
                                 <span>
-                                    {props.url}
+                                    {props.pessoa.url}
                                 </span>
                             </div>
                         </div>

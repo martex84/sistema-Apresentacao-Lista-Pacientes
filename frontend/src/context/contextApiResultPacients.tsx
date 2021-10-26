@@ -14,6 +14,8 @@ type ResultPessoaProvider = {
 
 type ResultPessoaContext = {
     changePage: (page: string) => Promise<void>,
+    changeModel: () => void,
+    getModel: () => boolean,
     user: DadosPessoaContextFinal[];
 }
 
@@ -22,6 +24,8 @@ export const ResultContext = createContext({} as ResultPessoaContext);
 export function ResultPessoaProvider(props: ResultPessoaProvider) {
 
     const [user, setUser] = useState<DadosPessoaContextFinal[]>([]);
+
+    const [model, setModel] = useState<boolean>(false);
 
     async function changePage(page: string) {
         const getPessoa = await api.get<ReturnPessoaGet>(`/?page=${page}&results=10&seed=abc&exc=login,registered,phone`);
@@ -76,6 +80,16 @@ export function ResultPessoaProvider(props: ResultPessoaProvider) {
         setUser(returno);
     }
 
+    function changeModel() {
+        setModel(
+            model === true ? false : true
+        )
+    }
+
+    function getModel() {
+        return model;
+    }
+
     useEffect(() => {
         if (!!user) {
             changePage("1")
@@ -83,7 +97,7 @@ export function ResultPessoaProvider(props: ResultPessoaProvider) {
     }, [])
 
     return (
-        <ResultContext.Provider value={{ user, changePage }}>
+        <ResultContext.Provider value={{ user, changePage, getModel, changeModel }}>
             {props.children}
         </ResultContext.Provider>
     );

@@ -37,7 +37,7 @@ export function Row(props: IPropsPessoa) {
                         </span>
                     </li>
                     <li className={`d-flex flex-row align-items-center justify-content-center`}>
-                        <button className={`btn btn-light`} data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => props.view(props.id)}>
+                        <button className={`btn btn-light`} onClick={() => props.view(props.id)} data-bs-toggle="modal" data-bs-target="#exampleModal">
                             View
                         </button>
                     </li>
