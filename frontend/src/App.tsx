@@ -12,6 +12,8 @@ import { DadosPessoaContextFinal } from './types'
 import styles from './styles/App.module.scss'
 import { Modal } from './components/modal';
 
+const hrefLocation = window.location.href.split("?page=")
+
 function App() {
 
   const [arrayPessoa, setArrayPessoa] = useState<DadosPessoaContextFinal[]>([]);
@@ -33,22 +35,32 @@ function App() {
     },
     cell: "",
     nat: "",
-    location: "",
+    location: {
+      street: {
+        number: "",
+        name: ""
+      },
+      city: "",
+      state: "",
+      country: ""
+    },
     id: {
       value: "",
     },
     picture: {
       large: ""
     },
-    url: ""
+    url: ``
   });
-
-  const hrefLocation = window.location.href.split("?page=")
 
   const resultContext = useContext(ResultContext);
 
   if (resultContext.user.length === 0) {
     resultContext.changePage(hrefLocation[1]);
+  }
+
+  if (hrefLocation[1] === undefined) {
+    history.pushState({}, "", `${hrefLocation[0]}?page=1`);
   }
 
   function mudancaPage() {
@@ -67,8 +79,6 @@ function App() {
       arrayPessoa.forEach(valor => {
         if (valor.id.value === id) {
           setPessoa(valor);
-
-          console.log(valor)
         }
       })
     }

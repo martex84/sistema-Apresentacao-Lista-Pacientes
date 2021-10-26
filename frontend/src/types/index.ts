@@ -11,7 +11,15 @@ export type DadosPessoaContext = {
     },
     cell: string,
     nat: string,
-    location: string,
+    location: {
+        street: {
+            number: string,
+            name: string
+        },
+        city: string,
+        state: string,
+        country: string
+    },
     id: {
         value: string
     },
@@ -37,7 +45,15 @@ export type DadosPessoaContextFinal = {
     },
     cell: string,
     nat: string,
-    location: string,
+    location: {
+        street: {
+            number: string,
+            name: string
+        },
+        city: string,
+        state: string,
+        country: string
+    },
     id: {
         value: string
     },

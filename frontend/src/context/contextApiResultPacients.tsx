@@ -34,7 +34,12 @@ export function ResultPessoaProvider(props: ResultPessoaProvider) {
 
                 let returnFinal: any = {};
 
+                let cont: number = 0;
+
                 Object.entries(value).forEach(objeto => {
+
+                    cont++;
+
                     if (objeto[0] === "dob") {
 
                         const { date } = objeto[1] as any;
@@ -56,6 +61,10 @@ export function ResultPessoaProvider(props: ResultPessoaProvider) {
                     }
                     else {
                         returnFinal[objeto[0]] = objeto[1]
+                    }
+
+                    if (Object.keys(value).length === cont) {
+                        returnFinal['url'] = `http://localhost:3000/?page=${page}&id=${value.id.value}`
                     }
                 })
 
