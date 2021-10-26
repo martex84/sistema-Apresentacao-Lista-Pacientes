@@ -3,19 +3,21 @@ import { VscAccount } from 'react-icons/vsc'
 
 import { DadosPessoaContextFinal } from "../../types"
 
+import styles from './styles.module.scss'
+
 export function Modal(props: DadosPessoaContextFinal) {
     return (
         <>
-            <div className="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className={`${styles.modal} modal fade`} id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
-                    <div className="modal-content">
+                    <div className={`${styles.containerModal} modal-content`}>
                         <div className="modal-header">
-                            <div>
+                            <div className={`${styles.containerImagem}`}>
                                 <img src={props.picture.large} alt="Imagem Paciente" />
                             </div>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div className="modal-body">
+                        <div className={`${styles.containerBody} modal-body`}>
                             <div>
                                 <span>
                                     Id:
@@ -42,7 +44,7 @@ export function Modal(props: DadosPessoaContextFinal) {
                             </div>
                             <div>
                                 <span>
-                                    Genêro:
+                                    Gênero:
                                 </span>
                                 <span>
                                     {props.gender}
@@ -74,7 +76,38 @@ export function Modal(props: DadosPessoaContextFinal) {
                             </div>
                             <div>
                                 <span>
-                                    Endereço
+                                    Endereço:
+                                </span>
+                                <span>
+                                    {`${props.location.street.name
+                                        } - ${props.location.street.number}`}
+                                </span>
+                            </div>
+                            <div>
+                                <span>
+                                    Cidade:
+                                </span>
+                                <span>
+                                    {`${props.location.city
+                                        }`}
+                                </span>
+                            </div>
+                            <div>
+                                <span>
+                                    Estado:
+                                </span>
+                                <span>
+                                    {`${props.location.state
+                                        }`}
+                                </span>
+                            </div>
+                            <div>
+                                <span>
+                                    País:
+                                </span>
+                                <span>
+                                    {`${props.location.country
+                                        }`}
                                 </span>
                             </div>
                             <div>
