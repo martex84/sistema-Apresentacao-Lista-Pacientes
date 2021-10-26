@@ -18,6 +18,8 @@ function App() {
 
   const [arrayPessoa, setArrayPessoa] = useState<DadosPessoaContextFinal[]>([]);
 
+  const [modalAberto, setModalAberto] = useState<boolean>(false);
+
   const [pessoa, setPessoa] = useState<DadosPessoaContextFinal>({
     name: {
       title: "",
@@ -55,12 +57,33 @@ function App() {
 
   const resultContext = useContext(ResultContext);
 
-  if (resultContext.user.length === 0) {
-    resultContext.changePage(hrefLocation[1]);
+  async function verificaLink() {
+    if (resultContext.user.length === 0) {
+      await resultContext.changePage(hrefLocation[1]);
+    }
   }
+
+  verificaLink();
 
   if (hrefLocation[1] === undefined) {
     history.pushState({}, "", `${hrefLocation[0]}?page=1`);
+  }
+
+  if (resultContext.user.length !== 0 && hrefLocation[1] !== undefined) {
+    if (hrefLocation[1].indexOf("id") !== -1) {
+      if (modalAberto === false) {
+
+        const id = hrefLocation[1].split("id=")[1];
+
+        resultContext.user.forEach(valor => {
+          if (valor.id.value === id) {
+            setPessoa(valor);
+          }
+        });
+
+        setModalAberto(true)
+      }
+    }
   }
 
   function mudancaPage() {
