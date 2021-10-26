@@ -15,7 +15,9 @@ export type DadosPessoaContext = {
     id: {
         value: string
     },
-    url: string
+    picture: {
+        large: string
+    }
 }
 
 export type DadosPessoaContextFinal = {
@@ -38,6 +40,9 @@ export type DadosPessoaContextFinal = {
     location: string,
     id: {
         value: string
+    },
+    picture: {
+        large: string
     },
     url: string
 }

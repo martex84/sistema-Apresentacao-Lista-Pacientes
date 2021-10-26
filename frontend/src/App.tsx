@@ -10,10 +10,38 @@ import { ResultContext } from './context/contextApiResultPacients'
 import { DadosPessoaContextFinal } from './types'
 
 import styles from './styles/App.module.scss'
+import { Modal } from './components/modal';
 
 function App() {
 
   const [arrayPessoa, setArrayPessoa] = useState<DadosPessoaContextFinal[]>([]);
+
+  const [pessoa, setPessoa] = useState<DadosPessoaContextFinal>({
+    name: {
+      title: "",
+      first: "",
+      last: ""
+    },
+    email: "",
+    gender: "",
+    dob: {
+      date: {
+        day: "",
+        month: "",
+        year: ""
+      }
+    },
+    cell: "",
+    nat: "",
+    location: "",
+    id: {
+      value: "",
+    },
+    picture: {
+      large: ""
+    },
+    url: ""
+  });
 
   const hrefLocation = window.location.href.split("?page=")
 
@@ -32,6 +60,18 @@ function App() {
     resultContext.changePage(`${numeroPage}`);
 
     window.location.reload();
+  }
+
+  function viewPaciente(id: string) {
+    if (arrayPessoa) {
+      arrayPessoa.forEach(valor => {
+        if (valor.id.value === id) {
+          setPessoa(valor);
+
+          console.log(valor)
+        }
+      })
+    }
   }
 
   useEffect(() => {
@@ -89,6 +129,7 @@ function App() {
                     date={valor.dob.date}
                     gender={valor.gender}
                     id={valor.id.value}
+                    view={viewPaciente}
                   />
                 );
               }
@@ -106,6 +147,32 @@ function App() {
           </button>
         </div>
       </section>
+      <Modal
+        name={{
+          title: pessoa.name.title,
+          first: pessoa.name.first,
+          last: pessoa.name.last
+        }}
+        email={pessoa.email}
+        gender={pessoa.gender}
+        dob={{
+          date: {
+            day: pessoa.dob.date.day,
+            month: pessoa.dob.date.month,
+            year: pessoa.dob.date.year
+          }
+        }}
+        cell={pessoa.cell}
+        nat={pessoa.nat}
+        location={pessoa.location}
+        id={{
+          value: pessoa.id.value
+        }}
+        picture={{
+          large: pessoa.picture.large
+        }}
+        url={pessoa.url}
+      />
       <Footer />
     </div>
   )

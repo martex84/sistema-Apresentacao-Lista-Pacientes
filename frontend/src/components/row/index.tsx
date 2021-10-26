@@ -1,4 +1,3 @@
-
 import styles from './styles.module.scss';
 interface IPropsPessoa {
     id: string
@@ -13,6 +12,7 @@ interface IPropsPessoa {
         year: string
     },
     gender: string,
+    view: (id: string) => void
 }
 
 export function Row(props: IPropsPessoa) {
@@ -37,7 +37,7 @@ export function Row(props: IPropsPessoa) {
                         </span>
                     </li>
                     <li className={`d-flex flex-row align-items-center justify-content-center`}>
-                        <button className={`btn btn-light`}>
+                        <button className={`btn btn-light`} data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => props.view(props.id)}>
                             View
                         </button>
                     </li>
