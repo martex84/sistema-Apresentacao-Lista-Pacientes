@@ -1,4 +1,4 @@
-import { Children, createContext, ReactNode, useEffect, useState } from "react";
+import React, { Children, createContext, ReactNode, useEffect, useState } from "react";
 
 import { api } from "../services/api";
 import { DadosPessoaContext, DadosPessoaContextFinal } from '../types'
@@ -12,10 +12,15 @@ type ResultPessoaProvider = {
     children: ReactNode;
 }
 
+type ChangeModel = {
+    display: React.CSSProperties,
+    classe: string
+}
+
 type ResultPessoaContext = {
     changePage: (page: string) => Promise<void>,
-    changeModel: () => void,
-    getModel: () => boolean,
+    changeModel: (classe: string, display: React.CSSProperties) => void,
+    getModel: () => ChangeModel,
     user: DadosPessoaContextFinal[];
 }
 
@@ -25,7 +30,10 @@ export function ResultPessoaProvider(props: ResultPessoaProvider) {
 
     const [user, setUser] = useState<DadosPessoaContextFinal[]>([]);
 
-    const [model, setModel] = useState<boolean>(false);
+    const [model, setModel] = useState<ChangeModel>({
+        classe: "",
+        display: {}
+    });
 
     async function changePage(page: string) {
         const getPessoa = await api.get<ReturnPessoaGet>(`/?page=${page}&results=10&seed=abc&exc=login,registered,phone`);
@@ -80,14 +88,15 @@ export function ResultPessoaProvider(props: ResultPessoaProvider) {
         setUser(returno);
     }
 
-    function changeModel() {
-        setModel(
-            model === true ? false : true
-        )
+    function changeModel(classe: string, display: React.CSSProperties) {
+        setModel({
+            classe: classe,
+            display: display
+        });
     }
 
     function getModel() {
-        return model;
+        return model
     }
 
     useEffect(() => {

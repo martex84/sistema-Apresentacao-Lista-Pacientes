@@ -1,8 +1,6 @@
 import { useState, useEffect, useContext, useCallback } from 'react'
 import { VscSearch } from 'react-icons/vsc'
 import { BsArrowClockwise, BsSortAlphaDown } from 'react-icons/bs'
-import { Link } from 'react-router-dom'
-
 import { Header } from './components/header';
 import { Footer } from './components/footer';
 import { Row } from './components/row';
@@ -18,7 +16,7 @@ function App() {
 
   const [arrayPessoa, setArrayPessoa] = useState<DadosPessoaContextFinal[]>([]);
 
-  const [idPessoa, setIdPessoa] = useState<string>("");
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const [pessoa, setPessoa] = useState<DadosPessoaContextFinal>({
     name: {
@@ -59,23 +57,35 @@ function App() {
 
   async function verificaLink() {
     if (resultContext.user.length === 0) {
-      const posicaoSite: string = hrefLocation[1].split("&")[0] === undefined ? hrefLocation[1] : hrefLocation[1].split("&")[0];
+      let posicaoSite: string = "1"
 
-      await resultContext.changePage(posicaoSite).then(() => { });
+      if (hrefLocation.length === 2) {
+        hrefLocation[1].split("&")[0] === undefined ? hrefLocation[1] : hrefLocation[1].split("&")[0];
+        await resultContext.changePage(posicaoSite).then(() => { });
+      }
+      else if (hrefLocation.length === 1) {
+        await resultContext.changePage(posicaoSite).then(() => { });
+      }
+
+
+
     }
   }
 
   verificaLink();
 
+  //Verifica presença de paginação(Normal)
   if (hrefLocation[1] === undefined) {
     history.pushState({}, "", `${hrefLocation[0]}?page=1`);
     createLocalStorate(false, false);
   }
 
-  if (resultContext.user.length !== 0 && hrefLocation[1] !== undefined) {
-    if (hrefLocation[1].indexOf("id") !== -1) {
-      console.log(hrefLocation[1])
-      createLocalStorate(true, false);
+  //Verifica presença de pequisa por id
+  if (hrefLocation[1] !== undefined) {
+    if (hrefLocation.length === 2) {
+      if (hrefLocation[1].indexOf("id") !== -1) {
+        createLocalStorate(true, false);
+      }
     }
   }
 
@@ -99,10 +109,8 @@ function App() {
       })
     }
 
-    console.log(pessoa);
-
-    if (localStorage.getItem("SALPessoa") === null) {
-      createLocalStorate(true, false);
+    if (JSON.parse(localStorage.getItem("SALPessoa") as string) === null) {
+      createLocalStorate(false, false);
     }
   }
 
@@ -113,38 +121,31 @@ function App() {
     }))
   }
 
-  function verificaPessoa() {
-    const verificacao = Object.values(pessoa).filter((valor) => valor !== "");
-
-    let valorRetorno = false;
-
-    console.log(verificacao);
-
-    if (verificacao.length === 10) {
-      valorRetorno = true;
-    }
-
-    return valorRetorno
+  function setModal(valor: boolean) {
+    setShowModal(valor);
   }
-
-  useEffect(() => {
-
-
-    console.log(pessoa);
-  }, [pessoa, setPessoa])
 
   useEffect(() => {
     if (arrayPessoa.length === 0 && resultContext.user.length !== 0) {
       setArrayPessoa(resultContext.user);
     }
-    if (arrayPessoa.length > 0) {
+    else if (arrayPessoa.length > 0) {
       if (localStorage !== null) {
         if (JSON.parse(localStorage.getItem("SALPessoa") as string).view === true && JSON.parse(localStorage.getItem("SALPessoa") as string).model === false) {
           createLocalStorate(false, true);
         }
-        else if (JSON.parse(localStorage.getItem("SALPessoa") as string).view === false && JSON.parse(localStorage.getItem("SALPessoa") as string).model === true) {
+        else if (JSON.parse(localStorage.getItem("SALPessoa") as string).view === false && JSON.parse(localStorage.getItem("SALPessoa") as string).model === true && hrefLocation.length >= 2) {
+          const id = hrefLocation[1].split("id=")[1];
 
+          if (id !== undefined && showModal === false) {
+            const pessoaInterna = arrayPessoa.filter((pessoa) => pessoa.id.value === id);
 
+            setPessoa(pessoaInterna[0] as DadosPessoaContextFinal);
+
+            resultContext.changeModel("show", { display: 'block' });
+
+            setShowModal(true);
+          }
         }
       }
     }
@@ -219,6 +220,12 @@ function App() {
       </section>
       <Modal
         pessoa={pessoa}
+        changeModal={
+          {
+            showModal,
+            setModal
+          }
+        }
       />
       <Footer />
     </div>

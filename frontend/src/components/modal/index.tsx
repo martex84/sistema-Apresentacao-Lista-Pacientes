@@ -1,6 +1,5 @@
 
-import React, { useContext, useEffect, useState } from 'react'
-import { VscAccount } from 'react-icons/vsc'
+import { useContext } from 'react'
 
 import { DadosPessoaContextFinal } from "../../types";
 
@@ -9,50 +8,34 @@ import { ResultContext } from '../../context/contextApiResultPacients';
 import styles from './styles.module.scss'
 
 type TConfigModal = {
-    pessoa: DadosPessoaContextFinal
+    pessoa: DadosPessoaContextFinal,
+    changeModal: {
+        showModal: boolean;
+        setModal: (valor: boolean) => void;
+    }
 }
 
 export function Modal(props: TConfigModal) {
 
-    const [displayInterno, setDisplayInterno] = useState<string>("")
-
-    const [styleInterno, setStyleInterno] = useState<React.CSSProperties>({});
-
     const contextApi = useContext(ResultContext);
 
     function alterarDisplay() {
+        localStorage.setItem("SALPessoa", JSON.stringify({
+            model: false,
+            show: false
+        }))
 
-        if (verificaOpcaoModal()) {
-            localStorage.setItem("SALPessoa", JSON.stringify({
-                model: false
-            }))
+        contextApi.changeModel("", {});
 
-            setDisplayInterno("")
-            setStyleInterno({})
-        }
+        const hrefLocation = window.location.href.split("&id=")[0]
+
+        history.pushState({}, "", `${hrefLocation}`);
+
     }
-
-    function verificaOpcaoModal() {
-        let returnValor = false;
-        if (localStorage.getItem("SALPessoa") !== null) {
-            if (JSON.parse(localStorage.getItem("SALPessoa") as string).model === true && displayInterno === "d-none" && props.pessoa.id.value !== "" && JSON.parse(localStorage.getItem("SALPessoa") as string).view === false) {
-                returnValor = true;
-            }
-        }
-        return returnValor;
-    }
-
-    if (verificaOpcaoModal()) {
-        console.log("TEste")
-        setDisplayInterno("show");
-        setStyleInterno({ display: 'block' });
-    }
-
-    //UsarCallback para verificar se foi alterado
 
     return (
         <>
-            <div className={`${styles.modal} ${displayInterno} modal fade`} id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true" style={styleInterno}>
+            <div className={`${styles.modal} ${contextApi.getModel().classe} modal fade`} id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true" style={contextApi.getModel().display}>
                 <div className="modal-dialog">
                     <div className={`${styles.containerModal} modal-content`}>
                         <div className="modal-header">
