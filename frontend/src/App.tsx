@@ -131,7 +131,7 @@ function App() {
       setArrayPessoa(resultContext.user);
     }
     else if (arrayPessoa.length > 0) {
-      if (localStorage.getItem("SALPessoa") !== null) {
+      if (JSON.parse(localStorage.getItem("SALPessoa") as string) !== null) {
         if (JSON.parse(localStorage.getItem("SALPessoa") as string).view === true && JSON.parse(localStorage.getItem("SALPessoa") as string).model === false) {
           createLocalStorate(false, true);
         }
