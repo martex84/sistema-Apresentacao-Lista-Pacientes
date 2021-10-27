@@ -59,7 +59,7 @@ function App() {
     if (resultContext.user.length === 0) {
       let posicaoSite: string = "1"
 
-      if (hrefLocation.length === 2) {
+      if (hrefLocation.length >= 2) {
         hrefLocation[1].split("&")[0] === undefined ? hrefLocation[1] : hrefLocation[1].split("&")[0];
         await resultContext.changePage(posicaoSite).then(() => { });
       }
@@ -67,18 +67,10 @@ function App() {
         await resultContext.changePage(posicaoSite).then(() => { });
       }
 
-
-
     }
   }
 
   verificaLink();
-
-  //Verifica presença de paginação(Normal)
-  if (hrefLocation[1] === undefined) {
-    history.pushState({}, "", `${hrefLocation[0]}?page=1`);
-    createLocalStorate(false, false);
-  }
 
   //Verifica presença de pequisa por id
   if (hrefLocation[1] !== undefined) {
@@ -86,8 +78,17 @@ function App() {
       if (hrefLocation[1].indexOf("id") !== -1) {
         createLocalStorate(true, false);
       }
+      else if (JSON.parse(localStorage.getItem("SALPessoa") as string) === null) {
+        createLocalStorate(false, false);
+      }
     }
   }
+  else if (hrefLocation.length === 1) {
+    history.pushState({}, "", `${hrefLocation[0]}?page=1`);
+    createLocalStorate(false, false);
+  }
+  //Verifica presença de paginação(Normal)
+
 
   function mudancaPage() {
 
@@ -130,7 +131,7 @@ function App() {
       setArrayPessoa(resultContext.user);
     }
     else if (arrayPessoa.length > 0) {
-      if (localStorage !== null) {
+      if (localStorage.getItem("SALPessoa") !== null) {
         if (JSON.parse(localStorage.getItem("SALPessoa") as string).view === true && JSON.parse(localStorage.getItem("SALPessoa") as string).model === false) {
           createLocalStorate(false, true);
         }
